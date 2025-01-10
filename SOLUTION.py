@@ -1,12 +1,9 @@
-import os
-import re
-from bs4 import BeautifulSoup
 """
 Passo a passo da solução:
 1 - Acessar a pasta /PATENTES
 2 - Percorrer cada Arquivo HTML
 3 - Verificar Se o arquivo contém ou não Registros
-    • 3.1 Se sim: 
+    • 3.1 Se sim:
         - Pegar o dado do CNPJ.
         - Percorrer a tabela de registro de patentes adicionando eles a lista.
         - Retornar a lista de Registros.
@@ -15,6 +12,24 @@ Passo a passo da solução:
         - Preencher demais colunas daquele registro com  -
 4 - Gerar tabela em arquivo HTML a partir da lista de registros gerada.
 """
+import os
+import re
+import subprocess
+import sys
+from bs4 import BeautifulSoup
+
+# Função para instalar o pacote do BeautifulSoup
+def install_package():
+    """
+    Instala automaticamente o pacote do BeautifulSoup para o script,
+    caso não estejam disponíveis para importar no ambiente atual.
+    """
+    package = "beautifulsoup4"
+    try:
+        __import__(package)
+    except ImportError:
+        subprocess.check_call([sys.executable, "-m", "pip", "install", package])
+
 
 # Definição do caminho da pasta do desafio.
 path_to_patentes = "./PATENTES"
@@ -115,6 +130,7 @@ def generate_output_html(registros, output_path):
 
 # Função principal para processar os arquivos e gerar o HTML
 if __name__ == "__main__":
+    install_package()
     registros = process_patente_files(path_to_patentes)
     generate_output_html(registros, output_file)
     print(f"Arquivo {output_file} gerado com sucesso!")
